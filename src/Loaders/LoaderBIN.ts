@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 import type { ILoaderBinUploadData } from './types'
+import LoaderRoot from './LoaderRoot'
 
-class LoaderBIN {
+class LoaderBIN extends LoaderRoot {
 
     public scene: THREE.Scene
     private uploadData: ILoaderBinUploadData = { 
@@ -11,18 +12,12 @@ class LoaderBIN {
         uvs: new ArrayBuffer()
     }
 
-    public onMeshUploaded: Set<any> = new Set()
-
     constructor (scene: THREE.Scene) {
+        super()
         this.scene = scene
     }
 
-    _notifyonMeshUploaded (mesh: THREE.Mesh) {
-        for (let cb of this.onMeshUploaded) cb(mesh)
-    }
-
     async load () {
-    
         for (let key in this.uploadData) {
             this.uploadData[key as keyof ILoaderBinUploadData] = await fetch(`/door_data/${String(key)}.bin`).then(async (r) => await r.arrayBuffer())
         }
@@ -40,10 +35,10 @@ class LoaderBIN {
     
         const texture = await new THREE.TextureLoader().loadAsync('public/door_data/texture.png' ); 
     
-        const material = new THREE.MeshBasicMaterial({ 
+        const material = new THREE.MeshStandardMaterial({ 
             map: texture, 
             aoMap: texture, 
-            specularMap: texture,
+            //specularMap: texture,
             side: 2
         });
     
@@ -53,9 +48,11 @@ class LoaderBIN {
         }
         
         const mesh = new THREE.Mesh(geometry, material)
+        mesh.castShadow = true
+
         this.scene.add(mesh)
     
-        this._notifyonMeshUploaded(mesh)
+        this._notifyObserverByName('onMeshUploaded', mesh)
     }
 }
 

@@ -18,7 +18,7 @@ class MainCamera {
         this.orbit.target = new THREE.Vector3(0, 0, 0).clone()
     }
 
-    pointTheCameraAt (mesh: THREE.Mesh) {
+    pointTheCameraAtMesh (mesh: THREE.Mesh) {
         if (!mesh) return
        
         const center = MeshDimensionsCalc.getMeshCenter(mesh)
