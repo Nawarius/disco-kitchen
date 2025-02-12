@@ -1,16 +1,21 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import LoaderRoot from './LoaderRoot'
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 class LoaderGLB extends LoaderRoot {
 
     public scene: THREE.Scene
+    public glb: any 
     private loader: GLTFLoader
+    public renderer: any
 
-    constructor (scene: THREE.Scene) {
+    constructor (scene: THREE.Scene, renderer: any) {
         super()
         this.scene = scene
+        this.glb = null
         this.loader = new GLTFLoader();
+        this.renderer = renderer
     }
 
     async load () {
@@ -23,20 +28,9 @@ class LoaderGLB extends LoaderRoot {
 
                 mesh.castShadow = true
                 
-
-                if (mesh.name.includes('Sphere001')) {
-                    //mesh.material.flatShading = true
-                    //mesh.material = new THREE.MeshStandardMaterial()
-                    //console.log(mesh.material)
-                }
-                //console.log(mesh.name)
                 if (mesh.name.includes('_Shadow')) {
-                    //console.log(mesh.name)
-                    //if (mesh.name.includes('Wall'))
-                    //mesh.castShadow = false
                     mesh.receiveShadow = true
                 }
-                
             }
         })
 
@@ -52,9 +46,16 @@ class LoaderGLB extends LoaderRoot {
         })
 
         this.scene.add(glb.scene)
-        
+
+        const pmremGenerator = new THREE.PMREMGenerator( this.renderer );
+        this.scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04, 1, 3).texture;
+
+        this.glb = glb
     }
 
+    getGlbScene () {
+        return this.glb.scene
+    }
 }
 
 export default LoaderGLB

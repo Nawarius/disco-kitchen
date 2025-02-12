@@ -4,19 +4,19 @@
     import LoaderGLB from '@/Loaders/LoaderGLB'
     import * as THREE from 'three'
     import { ref, onMounted } from 'vue'
+    
 
     const target = ref()
 
     const scene = new THREE.Scene()
 
-    const renderer = new THREE.WebGLRenderer()
+    const renderer = new THREE.WebGLRenderer({antialias: true})
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setAnimationLoop(animate)
-    
     //const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 10 );
     //scene.add( light )
 
@@ -38,7 +38,6 @@
     scene.add( cube )
     scene.add( light )
 
-
     const MainCameraInst = new MainCamera(renderer)
     MainCameraInst.init()
 
@@ -48,13 +47,14 @@
     LoaderBinInst.observers.onMeshUploaded.add(mesh => MainCameraInst.pointTheCameraAtMesh(mesh))
 
     // Upload kitchen from gltf
-    const LoaderGlbInst = new LoaderGLB(scene)
+    const LoaderGlbInst = new LoaderGLB(scene, renderer)
     LoaderGlbInst.load()
 
     const camera = MainCameraInst.getCamera()
 
-    function animate() {
-        MainCameraInst.updateOrbit()
+    function animate () {
+        //MainCameraInst.updateOrbit()
+        MainCameraInst.updateCamera()
         renderer.render(scene, camera)
     }
 
