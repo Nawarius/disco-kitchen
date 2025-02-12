@@ -12,7 +12,7 @@ class MainCamera {
     }
 
     init () {
-        this.camera.position.set(0, 0, 10)
+        this.camera.position.set(0, 0, 0)
 
         this.orbit.update()
         this.orbit.target = new THREE.Vector3(0, 0, 0).clone()
@@ -24,10 +24,18 @@ class MainCamera {
         const center = MeshDimensionsCalc.getMeshCenter(mesh)
         const maxSize = MeshDimensionsCalc.getMeshMaxSize(mesh)
     
-        this.orbit.target = center.clone()
-
         this.camera.position.set(center.x, center.y, center.z)
         this.camera.position.setZ(maxSize)
+
+        this.orbit.target = center.clone()
+    }
+
+    updateOrbit () {
+        this.orbit.update()
+    }
+
+    getCamera () {
+        return this.camera
     }
 }
 
