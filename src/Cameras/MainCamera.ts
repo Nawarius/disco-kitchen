@@ -1,11 +1,12 @@
 import MeshDimensionsCalc from '@/Dimensions/MeshDimensionsCalc'
 import * as THREE from 'three'
+import type { IMainMouseCoords } from './types'
 
 class MainCamera {
     public camera: THREE.PerspectiveCamera
 
     public keys: any = {}
-    public mouseCoords: any = {x: 0, y: 0}
+    public mouseCoords: IMainMouseCoords = {x: 0, y: 0}
 
     private isBlocked: boolean = false
     private isMouseDown: boolean = false

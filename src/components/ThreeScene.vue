@@ -5,8 +5,11 @@
     import Preloader from './Preloader.vue'
 
     import * as THREE from 'three'
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
     import { ref, onMounted } from 'vue'
     import DoorGUI from '@/GUI/DoorGUI'
+    import { hidePreloader } from '@/utils/preloader.utils'
+import AnimationGLB from '@/Animation/AnimationGLB'
 
     const target = ref()
 
@@ -18,6 +21,9 @@
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setAnimationLoop(animate)
+
+    const pmremGenerator = new THREE.PMREMGenerator(renderer )
+    scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04, 1, 3).texture
 
     const light = new THREE.PointLight( 0xffffbb, 100, 100 );
     light.castShadow = true
@@ -46,10 +52,20 @@
     LoaderBinInst.load()
     LoaderBinInst.observers.onMeshUploaded.add(mesh => MainCameraInst.pointTheCameraAtMesh(mesh))
 
-    // Upload kitchen from gltf
-    const LoaderGlbInst = new LoaderGLB(scene, renderer)
-    LoaderGlbInst.load()
+    // Animate Disco floor
+    const AnimInst = new AnimationGLB()
 
+
+    // Upload kitchen from gltf
+    const LoaderGlbInst = new LoaderGLB(scene)
+    LoaderGlbInst.load()
+    LoaderGlbInst.observers.onMeshUploaded.add(() => {
+        AnimInst.setGLB(LoaderGlbInst.getGLB())
+        
+        hidePreloader()
+    })
+
+    // Door width change gui
     const DoorGuiInst = new DoorGUI()
     DoorGuiInst.observers.onWidthChanged.add(width => {
         MainCameraInst.blockCamera(true)
@@ -62,9 +78,9 @@
         MainCameraInst.blockCamera(false)
     })
 
-
     function animate () {
         MainCameraInst.updateCamera()
+        AnimInst.animate()
         renderer.render(scene, MainCameraInst.getCamera())
     }
 
