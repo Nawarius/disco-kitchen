@@ -22,7 +22,7 @@ class LoaderBIN extends LoaderRoot {
 
     async load () {
         for (let key in this.uploadData) {
-            this.uploadData[key as keyof ILoaderBinUploadData] = await fetch(`/door_data/${String(key)}.bin`).then(async (r) => await r.arrayBuffer())
+            this.uploadData[key as keyof ILoaderBinUploadData] = await fetch(`public/door_data/${String(key)}.bin`).then(async (r) => await r.arrayBuffer())
         }
     
         const indices = new Uint16Array(this.uploadData.indices)
