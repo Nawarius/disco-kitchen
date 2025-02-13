@@ -38,7 +38,6 @@ class LoaderBIN extends LoaderRoot {
         const material = new THREE.MeshStandardMaterial({ 
             map: texture, 
             aoMap: texture, 
-            //specularMap: texture,
             side: 2
         });
     

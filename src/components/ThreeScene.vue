@@ -2,6 +2,8 @@
     import MainCamera from '@/Cameras/MainCamera'
     import LoaderBIN from '@/Loaders/LoaderBIN'
     import LoaderGLB from '@/Loaders/LoaderGLB'
+    import Preloader from './Preloader.vue'
+
     import * as THREE from 'three'
     import { ref, onMounted } from 'vue'
     
@@ -53,7 +55,6 @@
     const camera = MainCameraInst.getCamera()
 
     function animate () {
-        //MainCameraInst.updateOrbit()
         MainCameraInst.updateCamera()
         renderer.render(scene, camera)
     }
@@ -65,7 +66,8 @@
 </script>
 
 <template>
-  <div ref="target" id = "three_container"></div>
+    <Preloader />
+    <div ref="target" id = "three_container"></div>
 </template>
 
 <style>

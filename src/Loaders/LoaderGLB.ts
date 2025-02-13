@@ -19,7 +19,21 @@ class LoaderGLB extends LoaderRoot {
     }
 
     async load () {
-        const glb: any = await new Promise(res => res(this.loader.loadAsync('kitchen_model/Küche Held4.glb')))
+        const glb: any = await new Promise(res => {
+            this.loader.load('kitchen_model/Küche Held4.glb', (glb) => {
+                res(glb)
+            }, (e) => {
+                const percents = e.loaded / e.total * 100
+
+                if (percents < 100) {
+                    const preloaderProgress = document.getElementById('preloader_progress')
+                    if (preloaderProgress) preloaderProgress.innerHTML = `${percents.toFixed(0)}%`
+                } else {
+                    const preloaderWrap = document.getElementById('preloader_wrap')
+                    if (preloaderWrap) preloaderWrap.style.display = 'none'
+                }
+            })
+        })
         // //https://dl.dropbox.com/scl/fi/4hr8i7448zqcahq71ib54/K-che-Held3.glb?rlkey=aqsmh4rbbebo7odnyacemymui&st=h5t970jv
 
         glb.scene.traverse((obj: any) => {
