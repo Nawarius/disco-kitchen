@@ -7,6 +7,7 @@ class MainCamera {
     public keys: any = {}
     public mouseCoords: any = {x: 0, y: 0}
 
+    private isBlocked: boolean = false
     private isMouseDown: boolean = false
 
     constructor () {
@@ -30,6 +31,7 @@ class MainCamera {
 
     _keysControls () {
         window.addEventListener('keydown', (event) => {
+            if (this.isBlocked) return
             this.keys[event.code] = true
         });
 
@@ -38,6 +40,7 @@ class MainCamera {
         });
 
         window.addEventListener('mousedown', () => {
+            if (this.isBlocked) return
             this.isMouseDown = true
         });
 
@@ -83,6 +86,10 @@ class MainCamera {
 
     getCamera () {
         return this.camera
+    }
+
+    blockCamera (bool: boolean) {
+        this.isBlocked = bool
     }
 }
 

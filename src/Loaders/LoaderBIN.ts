@@ -5,6 +5,8 @@ import LoaderRoot from './LoaderRoot'
 class LoaderBIN extends LoaderRoot {
 
     public scene: THREE.Scene
+    public mesh: THREE.Mesh | null
+
     private uploadData: ILoaderBinUploadData = { 
         indices: new ArrayBuffer(), 
         positions: new ArrayBuffer(), 
@@ -15,6 +17,7 @@ class LoaderBIN extends LoaderRoot {
     constructor (scene: THREE.Scene) {
         super()
         this.scene = scene
+        this.mesh = null
     }
 
     async load () {
@@ -50,8 +53,14 @@ class LoaderBIN extends LoaderRoot {
         mesh.castShadow = true
 
         this.scene.add(mesh)
-    
+        
+        this.mesh = mesh
+
         this._notifyObserverByName('onMeshUploaded', mesh)
+    }
+
+    getMesh () {
+        return this.mesh
     }
 }
 
