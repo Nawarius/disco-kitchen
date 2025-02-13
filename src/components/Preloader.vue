@@ -4,15 +4,19 @@
 <template>
 <div id = "preloader_wrap" class = "preloader_wrap">
   <div class="lds-dual-ring"></div>
-  <span id = "preloader_progress"></span>
+  <span id = "preloader_progress">Loading is started. Please, wait.</span>
 </div>
 </template>
 
 <style scoped>
 .preloader_wrap {
+    background-color: white;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
     width: 100%;
     height: 100%;
-    border: 2px solid red;
     display: flex;
     align-items: center;
     justify-content: center;

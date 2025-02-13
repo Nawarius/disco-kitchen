@@ -8,8 +8,8 @@
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
     import { ref, onMounted } from 'vue'
     import DoorGUI from '@/GUI/DoorGUI'
-    import { hidePreloader } from '@/utils/preloader.utils'
-import AnimationGLB from '@/Animation/AnimationGLB'
+    import { displayPreloader } from '@/utils/preloader.utils'
+    import AnimationGLB from '@/Animation/AnimationGLB'
 
     const target = ref()
 
@@ -55,14 +55,13 @@ import AnimationGLB from '@/Animation/AnimationGLB'
     // Animate Disco floor
     const AnimInst = new AnimationGLB()
 
-
     // Upload kitchen from gltf
     const LoaderGlbInst = new LoaderGLB(scene)
     LoaderGlbInst.load()
     LoaderGlbInst.observers.onMeshUploaded.add(() => {
         AnimInst.setGLB(LoaderGlbInst.getGLB())
         
-        hidePreloader()
+        displayPreloader(false)
     })
 
     // Door width change gui
@@ -74,15 +73,25 @@ import AnimationGLB from '@/Animation/AnimationGLB'
         if (door_mesh) door_mesh.scale.set(1, 1, width)
     })
 
-    DoorGuiInst.observers.onFinishChange.add(() => {
-        MainCameraInst.blockCamera(false)
-    })
+    DoorGuiInst.observers.onFinishChange.add(() => MainCameraInst.blockCamera(false))
 
+    // Anim Loop
     function animate () {
         MainCameraInst.updateCamera()
         AnimInst.animate()
         renderer.render(scene, MainCameraInst.getCamera())
+
+        const door_mesh = LoaderBinInst.getMesh()
+        if (door_mesh) door_mesh.rotation.y += 0.01
     }
+
+    // Resize
+    window.addEventListener('resize', () => {
+        MainCameraInst.getCamera().aspect = window.innerWidth / window.innerHeight
+        MainCameraInst.getCamera().updateProjectionMatrix()
+
+        renderer.setSize(window.innerWidth, window.innerHeight)
+    })
 
     onMounted(() => {
         target.value.appendChild(renderer.domElement)
