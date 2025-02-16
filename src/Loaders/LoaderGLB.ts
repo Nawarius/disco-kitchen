@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import LoaderRoot from './LoaderRoot'
-import { writePercentage } from '@/utils/preloader.utils'
 
 class LoaderGLB extends LoaderRoot {
 
@@ -17,13 +16,16 @@ class LoaderGLB extends LoaderRoot {
         this.loader = new GLTFLoader();
     }
 
+    //public/kitchen_model/Küche Held4.glb
+    //https://dl.dropbox.com/scl/fi/yyuxk3v52oefm2a65v7z9/K-che-Held4.glb?rlkey=kijnor1i9h5z4urzb1fvzy3vh&st=lveul2at
+
     async load () {
         const glb: any = await new Promise(res => {
             this.loader.load('https://dl.dropbox.com/scl/fi/yyuxk3v52oefm2a65v7z9/K-che-Held4.glb?rlkey=kijnor1i9h5z4urzb1fvzy3vh&st=lveul2at', (glb) => {
                 res(glb)
             }, (e) => {
-                const percents = (e.loaded / (1024 * 1024))
-                writePercentage(percents)
+                const mbs = Number((e.loaded / (1024 * 1024)).toFixed(0))
+                this._notifyOnLoadingProcess(mbs)
             })
         })
         

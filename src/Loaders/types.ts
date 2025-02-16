@@ -7,6 +7,5 @@ export interface ILoaderBinUploadData {
 }
 
 export interface ILoaderRootObservers {
-    onMeshLoading: Set<any>,
     onMeshUploaded: Set<any>,
 }

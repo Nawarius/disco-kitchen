@@ -1,10 +1,13 @@
-<script>
+<script setup>
+
+const props = defineProps({ loadingProgress: Number })
+
 </script>
 
 <template>
 <div id = "preloader_wrap" class = "preloader_wrap">
   <div class="lds-dual-ring"></div>
-  <span id = "preloader_progress">Loading is started. Please, wait.</span>
+  <span id = "preloader_progress">{{ loadingProgress ? `${loadingProgress} mb loaded` : 'Loading is started. Please, wait.' }}</span>
 </div>
 </template>
 

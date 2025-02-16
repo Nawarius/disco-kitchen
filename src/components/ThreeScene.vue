@@ -2,14 +2,14 @@
     import MainCamera from '@/Cameras/MainCamera'
     import LoaderBIN from '@/Loaders/LoaderBIN'
     import LoaderGLB from '@/Loaders/LoaderGLB'
-    import Preloader from './Preloader.vue'
 
     import * as THREE from 'three'
     import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
     import { ref, onMounted } from 'vue'
     import DoorGUI from '@/GUI/DoorGUI'
-    import { displayPreloader } from '@/utils/preloader.utils'
     import AnimationGLB from '@/Animation/AnimationGLB'
+
+    const emit = defineEmits(['loadingInProgress', 'loadingIsComplete'])
 
     const target = ref()
 
@@ -61,7 +61,11 @@
     LoaderGlbInst.observers.onMeshUploaded.add(() => {
         AnimInst.setGLB(LoaderGlbInst.getGLB())
         
-        displayPreloader(false)
+        emit('loadingIsComplete')
+    })
+
+    LoaderGlbInst.onLoadingProcess.add(mbs => {
+        emit('loadingInProgress', mbs)
     })
 
     // Door width change gui
@@ -100,7 +104,6 @@
 </script>
 
 <template>
-    <Preloader />
     <div ref="target" id = "three_container"></div>
 </template>
 
